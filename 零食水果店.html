@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>零食店水果店门头设计AI · 实战高转化版</title>
+<style>
+*{
+  box-sizing: border-box;
+  margin:0;
+  padding:0;
+}
+body{
+  font-family: "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, #FFFBEB 0%, #F0FFEE 100%);
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+/* 顶部大标题长条 - 鲜果零食活力色系 */
+.header{
+  width: 100%;
+  background: linear-gradient(90deg, #FF5836, #FF9500, #4CD964);
+  color: #fff;
+  text-align: center;
+  padding: 50px 20px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 20px rgba(255, 88, 54, 0.15);
+}
+.header h1{
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+.header p{
+  font-size: 16px;
+  opacity: 0.95;
+}
+/* 内容卡片 */
+.container{
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 20px;
+  padding: 45px 40px;
+  box-shadow: 0 10px 40px rgba(255, 88, 54, 0.08);
+}
+/* 输入提示 */
+.input-label{
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: left;
+  font-weight: 500;
+}
+/* 输入框 */
+.input-box{
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 16px;
+  border: 1px solid #DCDFE6;
+  border-radius: 12px;
+  outline: none;
+  transition: 0.3s;
+  margin-bottom: 22px;
+}
+.input-box:focus{
+  border-color: #FF5836;
+  box-shadow: 0 0 0 4px rgba(255, 88, 54, 0.1);
+}
+/* 生成按钮 */
+.btn{
+  width: 100%;
+  padding: 17px;
+  background: linear-gradient(90deg, #FF5836, #FF9500);
+  color: #fff;
+  font-size: 17px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 88, 54, 0.2);
+}
+.btn:disabled{
+  background: #FFB99F;
+  cursor: not-allowed;
+  transform: none;
+}
+/* 结果区域 */
+.result{
+  max-width: 800px;
+  margin: 40px auto 0;
+  padding: 0 20px;
+}
+.item{
+  background: #fff;
+  padding: 18px 22px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  line-height: 1.6;
+  font-size: 15px;
+  border-left: 5px solid #FF5836;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+.item-text{
+  flex: 1;
+}
+/* 复制按钮 */
+.copy-btn{
+  padding: 8px 14px;
+  background: #FF5836;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+  white-space: nowrap;
+}
+.copy-btn:hover{
+  background: #E04020;
+}
+/* 已复制永久灰色样式 */
+.copy-btn.copied{
+  background: #cccccc !important;
+  color: #666666 !important;
+  cursor: default !important;
+}
+/* 一键复制全部 */
+.copy-all-box{
+  text-align: center;
+  margin-top: 20px;
+}
+.copy-all-btn{
+  padding: 12px 24px;
+  background: #FF5836;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.copy-all-btn:hover{
+  background: #E04020;
+}
+</style>
+
+<!-- 顶部大标题 -->
+<div class="header">
+  <h1>🍊🍬 零食店水果店门头设计AI · 高转化版</h1>
+  <p>社区街铺·生鲜连锁·零食集合店·高识别高食欲门头</p>
+</div>
+
+<!-- 内容区 -->
+<div class="container">
+  <div class="input-label">在此输入你的需求（店名/品类/风格）：</div>
+  <input type="text" class="input-box" id="input" placeholder="例如：鲜优果 水果店 亲民烟火气 吸塑灯箱 亚克力发光字">
+  <button class="btn" onclick="go()" id="generateBtn">✨ 生成10组提示词</button>
+</div>
+
+<!-- 结果展示区 -->
+<div class="result" id="result"></div>
+
+<script>
+// 零食店&水果店门头全套规则
+const 零食水果配置 = {
+  核心风格: "远距离识别+近距离诱惑、高人流高转化、热闹亲民有烟火气、丰富充足好逛、货多更新快选择多",
+  材质库: [
+    "吸塑灯箱","亚克力立体字","PVC发光字",
+    "铝塑板底","烤漆板底","局部玻璃贴膜","局部灯箱画面"
+  ],
+  灯光策略: "亮而不刺、匀而不散、大面积发光字、灯箱内打光、均匀泛光、中性色温或暖色温、增强新鲜与诱人度",
+  色彩体系: "红色、橙色、黄色、果绿色高食欲配色、搭配白色或浅色底、热闹不脏、丰富不乱、主色+辅助色秩序感",
+  字体信息: "粗体高识别度字体、字形稳定笔画清晰、店名最大、品类其次、卖点辅助、信息不杂乱",
+  固定必含: "完整正立面、落地玻璃门、品牌名、广告语、产品海报、白天自然光、高辨识度、高对比配色、非摊位、非附墙、非临时结构",
+  负向提示: "非摊位、非推车、非夜市临时铺、非挂靠招牌、非附墙门头、非临时结构、非局部门头",
+  视角要求: "正立面视角、正对门头、完整展示、白天自然光、无斜侧视、无夜景、无临时摊位"
+}
+
+let 当前需求 = ''
+let 所有提示词 = []
+
+// 随机选取
+function 随机取(arr, min, max) {
+  let count = Math.floor(Math.random() * (max - min + 1)) + min
+  let shuffled = [...arr].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, count).join('、')
+}
+
+// 生成单条（严格按你输出规则）
+function 生成单条(需求) {
+  let 材质 = 随机取(零食水果配置.材质库, 2, 3)
+  let 色彩 = 随机取(零食水果配置.色彩体系, 1, 2)
+  return `${零食水果配置.核心风格}，${需求}，${材质}，${色彩}，${零食水果配置.灯光策略}，${零食水果配置.字体信息}，${零食水果配置.固定必含}，${零食水果配置.负向提示}，门头正立面效果完全展示`
+}
+
+// 生成10组
+function 生成10组(需求) {
+  var arr = []
+  for(var i=0;i<10;i++){
+    arr.push(生成单条(需求))
+  }
+  return arr
+}
+
+// 复制单条 → 永久变灰
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied')
+  })
+}
+
+// 一键复制全部
+function copyAll() {
+  navigator.clipboard.writeText(所有提示词.join("\n\n")).then(() => {
+    alert("✅ 已复制全部 10 组零食水果店门头提示词！")
+  })
+}
+
+// 主生成逻辑
+function go() {
+  const btn = document.getElementById('generateBtn')
+  var val = document.getElementById('input').value.trim()
+  
+  if (!val) {
+    alert("请输入需求，例如：鲜优果 水果店 亲民烟火气")
+    return
+  }
+
+  btn.disabled = true
+  btn.innerText = "⏳ 正在生成..."
+
+  setTimeout(() => {
+    当前需求 = val
+    var list = 生成10组(当前需求)
+    所有提示词 = list
+    var html = ''
+    
+    list.forEach((item, index) => {
+      html += `
+      <div class="item">
+        <div class="item-text">${index+1}. ${item}</div>
+        <button class="copy-btn" onclick="copyText('${item.replace(/'/g, '&apos;')}', this)">复制</button>
+      </div>`
+    })
+    
+    html += `
+    <div class="copy-all-box">
+      <button class="copy-all-btn" onclick="copyAll()">📋 一键复制全部10组</button>
+    </div>`
+    
+    document.getElementById('result').innerHTML = html
+    btn.disabled = false
+    btn.innerText = "✨ 生成10组提示词"
+  }, 600)
+}
+</script>
+</body>
+</html>

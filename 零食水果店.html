@@ -127,19 +127,17 @@ button:hover{transform:scale(1.01);opacity:0.9;}
   display:none;
   font-size:13px;
 }
-
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <h1>🍊 零食水果店门头AI · 商业结构增强版 V3</h1>
+  <h1>🍊 零食水果店门头AI · 商业结构增强版 V3 | 古月智能体AI</h1>
   <p>爆款门头 / 高转化设计 / 即梦AI提示词系统</p>
 </div>
 
 <div class="container">
-
   <input id="input" placeholder="输入：店名 + 品类">
 
   <select id="style">
@@ -156,13 +154,12 @@ button:hover{transform:scale(1.01);opacity:0.9;}
     <button onclick="setStyle('夜市爆款')">夜市</button>
   </div>
 
-  <button onclick="go()">生成10组爆款门头提示词</button>
+  <button id="genBtn">生成10组爆款门头提示词</button>
 
 </div>
 
 <div class="result" id="result"></div>
-
-<div class="toast" id="toast">已复制</div>
+<div class="toast" id="toast"></div>
 
 <script>
 
@@ -176,13 +173,11 @@ const system = {
     "社区亲民":"绿+白+橙",
     "夜市爆款":"红+紫+橙"
   }
-}
-
-function setStyle(v){
-  document.getElementById("style").value = v;
-}
+};
 
 function r(a){return a[Math.floor(Math.random()*a.length)]}
+
+function setStyle(v){document.getElementById("style").value=v;}
 
 function build(name,style){
   return `商业门头设计｜${name}\n风格：${style}\n\n`+
@@ -194,54 +189,67 @@ function build(name,style){
   `设计要求：高人流吸引，高转化率，真实可落地商业门头`;
 }
 
+function showToast(msg){
+  const t=document.getElementById("toast");
+  t.innerText=msg;
+  t.style.display="block";
+  setTimeout(()=>t.style.display="none",1500);
+}
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast("复制成功");
+  }catch(e){
+    const ta=document.createElement("textarea");
+    ta.value=text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    showToast("复制成功");
+  }
+}
+
 function go(){
-  let name = document.getElementById("input").value.trim();
-  let style = document.getElementById("style").value;
+  let name=document.getElementById("input").value.trim();
+  let style=document.getElementById("style").value;
 
   if(!name){showToast("请输入店名");return;}
 
   let list=[];
   for(let i=0;i<10;i++) list.push(build(name,style));
 
-  window.DATA = list;
+  window.DATA=list;
 
   let html="";
 
   list.forEach((t,i)=>{
     html+=`
     <div class="item">
-      <div class="text">${i+1}.\n${escapeHtml(t)}</div>
-      <button class="copy" onclick="copyText(this)">复制</button>
+      <div class="text">${i+1}.\n${t}</div>
+      <button class="copy" data-text="${encodeURIComponent(t)}">复制</button>
     </div>`;
   });
 
-  html+=`<div class="copy-all"><button onclick="copyAll()">一键复制全部</button></div>`;
+  html+=`<div class="copy-all"><button id="copyAllBtn">一键复制全部</button></div>`;
 
-  document.getElementById("result").innerHTML = html;
+  document.getElementById("result").innerHTML=html;
+
+  document.querySelectorAll(".copy").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      copyText(decodeURIComponent(btn.dataset.text));
+    });
+  });
+
+  document.getElementById("copyAllBtn").addEventListener("click",()=>{
+    copyText(window.DATA.join("\n\n"));
+  });
 }
 
-function escapeHtml(str){
-  return str.replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-
-function copyText(btn){
-  let text = btn.parentNode.querySelector(".text").innerText;
-  navigator.clipboard.writeText(text);
-  btn.innerText="已复制";
-  showToast("复制成功");
-}
-
-function copyAll(){
-  navigator.clipboard.writeText(window.DATA.join("\n\n"));
-  showToast("已复制全部");
-}
-
-function showToast(msg){
-  let t=document.getElementById("toast");
-  t.innerText=msg;
-  t.style.display="block";
-  setTimeout(()=>t.style.display="none",1500);
-}
+window.addEventListener("DOMContentLoaded",()=>{
+  document.getElementById("genBtn").addEventListener("click",go);
+});
 
 </script>
 
